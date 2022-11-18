@@ -1,4 +1,5 @@
 import { Component } from 'react'
+
 import AppInfo from '../app-info/app-info'
 import SearchPanel from '../search-panel/search-panel'
 import AppFilter from '../app-filter/app-filter'
@@ -17,16 +18,33 @@ class App extends Component {
         { name: 'Carl W.', salary: 5000, increase: false, id: 3 },
       ],
     }
+    this.maxId = 4
   }
 
-  deletItem = (id) => {
+  deleteItem = (id) => {
     this.setState(({ data }) => {
-      // const index = data.findIndex((elem) => elem.id === id)
       return {
         data: data.filter((item) => item.id !== id),
       }
     })
   }
+
+  // Да, пока могут добавляться пустые пользователи. Мы это еще исправим
+  addItem = (name, salary) => {
+    const newItem = {
+      name,
+      salary,
+      increase: false,
+      id: this.maxId++,
+    }
+    this.setState(({ data }) => {
+      const newArr = [...data, newItem]
+      return {
+        data: newArr,
+      }
+    })
+  }
+
   render() {
     return (
       <div className="app">
@@ -37,8 +55,8 @@ class App extends Component {
           <AppFilter />
         </div>
 
-        <EmployeesList data={this.state.data} onDelete={this.deletItem} />
-        <EmployeesAddForm />
+        <EmployeesList data={this.state.data} onDelete={this.deleteItem} />
+        <EmployeesAddForm onAdd={this.addItem} />
       </div>
     )
   }
